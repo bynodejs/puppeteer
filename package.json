@@ -1,0 +1,32 @@
+{
+  "name": "puppeteer-example",
+  "version": "1.0.0",
+  "description": "puppeteer-example",
+  "author": "AGUMON",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bynodejs/puppeteer"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "exceljs": "^1.14.0",
+    "puppeteer": "^1.16.0",
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {
+    "eslint-plugin-mocha": "^4.12.1",
+    "file-system": "^2.2.2",
+    "jest": "^21.2.1",
+    "js-comments": "^0.5.4",
+    "lodash": "^4.17.11"
+  },
+  "main": ".eslintrc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node.js",
+    "puppeteer"
+  ]
+}
