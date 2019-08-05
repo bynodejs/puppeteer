@@ -1,12 +1,12 @@
 {
-  "name": "puppeteer-example",
+  "name": "crawling",
   "version": "1.0.0",
-  "description": "puppeteer-example",
+  "description": "crawling",
   "author": "AGUMON",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bynodejs/puppeteer"
+    "url": "git+https://github.com/bynodejs/crawling.git"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
@@ -26,7 +26,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "node.js",
-    "puppeteer"
-  ]
+    "crawling",
+    "puppeteer",
+    "cheerio",
+    "exceljs",
+    "readline"
+  ],
+  "bugs": {
+    "url": "https://github.com/bynodejs/crawling/issues"
+  },
+  "homepage": "https://github.com/bynodejs/crawling#readme"
 }
