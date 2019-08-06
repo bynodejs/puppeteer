@@ -1,31 +1,45 @@
 'use strict';
 
-// require modules
-const puppeteer = require('puppeteer');
-
 /**
-* @description hashtag search to instagram
-* `SEARCH="content" node instagram.js`
-*/
-try {
-    (async () => {
-        const browser = await puppeteer.launch({ headless: false });
-        const page = await browser.newPage();
-        await page.goto(`https://www.instagram.com/explore/tags/${encodeURI(process.env.SEARCH)}`);
+ * @description instagram tag 검색
+ */
 
-        await page.waitForSelector('.EZdmt');
+// require modules
+const puppeteer = require('puppeteer'),
+    readline = require('readline-sync');
 
-        const images = await page.$$eval('.Nnq7C img', image => {
-            return image.map(image => image.src)
-        });
+let userInput = false;
 
-        for (let image of images) {
-            await page.goto(image);
-            await page.waitFor(2000);
-            await page.screenshot({ path: `${new Date().getTime().toString(36)}.png` });
-        }
-        await browser.close();
-    })();
-} catch (error) {
-    console.error(error);
+async function initPupp(url) {
+    const browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
+    await page.goto(url, { waitUntil: 'networkidle2' });
+    await page.setViewport({ width: 1248, height: 1024 });
+
+    return page;
+};
+
+async function pageControl(pageInfo) {
+
+    await pageInfo.waitForSelector('.EZdmt');
+
+    const images = await pageInfo.$$eval('.Nnq7C img', image => {
+        return image.map(image => image.src);
+    });
+
+    for (let image of images) {
+        await pageInfo.goto(image);
+        await pageInfo.waitFor(2000);
+        await pageInfo.screenshot({ path: `${new Date().getTime().toString(36)}.png` });
+    }
+
+    console.log('saved');
+    await pageInfo.browser.close();
+};
+
+userInput = readline.question('검색어 입력 (종료는 Ctrl+c) > ');
+
+if (userInput.trim().length > 0) {
+    initPupp(`https://www.instagram.com/explore/tags/${userInput}`)
+        .then(pageInfo => pageControl(pageInfo));
 };

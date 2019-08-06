@@ -1,29 +1,30 @@
 'use strict';
 
+/**
+ * @description naver map 검색
+ */
+
 // require modules
 const puppeteer = require('puppeteer'),
   readline = require('readline-sync'),
   cheerio = require('cheerio'),
   Excel = require('exceljs');
 
-let userInput, isStart = false;
+let userInput = false;
 
 async function initPupp(url) {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   return { page, browser, url };
-}
+};
 
 async function gotoPage(pageInfo) {
   await pageInfo.page.goto(pageInfo.url, { waitUntil: 'networkidle2' });
-  await pageInfo.page.setViewport({
-    width: 1248,
-    height: 1024,
-  });
+  await pageInfo.page.setViewport({ width: 1248, height: 1024 });
 
   return pageInfo;
-}
+};
 
 async function searchForm(pageInfo) {
   const inputForm = await pageInfo.page.$('#search-input');
@@ -33,10 +34,11 @@ async function searchForm(pageInfo) {
   await pageInfo.page.waitFor(1000);
 
   return pageInfo;
-}
+};
 
 async function pageControl(pageInfo) {
   let contents = [];
+
   while (1) {
     pageInfo = await getPaging(pageInfo);
     contents = contents.concat(await getContent(pageInfo));
@@ -50,23 +52,26 @@ async function pageControl(pageInfo) {
       console.log('====================================');
       break;
     }
+    
     pageInfo.page.click('div.paginate.loaded > strong + a', { delay: 150 });
     await pageInfo.page.waitFor(1000);
   }
 
   makeExcel(contents, pageInfo);
-}
+};
+
 async function getPaging(pageInfo) {
   let $ = cheerio.load(await pageInfo.page.content());
+
   pageInfo.paging = {
     curPage: $('div.paginate.loaded > strong').text(),
     nextCurPage: $('div.paginate.loaded > strong + a'),
     next: $('div.paginate.loaded > .next'),
-    lastChild: $('div.paginate.loaded > .last-child'),
+    lastChild: $('div.paginate.loaded > .last-child')
   };
 
   return pageInfo;
-}
+};
 
 async function getContent(pageInfo) {
   let buffer = [];
@@ -77,35 +82,21 @@ async function getContent(pageInfo) {
       let element = $(ele).find('div.lsnx > dl');
 
       buffer.push({
-        title: $(element)
-          .find('dt > a')
-          .text(),
-        addr: $(element)
-          .find('dd.addr')
-          .text()
-          .replace(/지번/gi, '')
-          .trim(),
-        tel: $(element)
-          .find('dd.tel')
-          .text()
-          .trim(),
+        title: $(element).find('dt > a').text(),
+        addr: $(element).find('dd.addr').text().replace(/지번/gi, '').trim(),
+        tel: $(element).find('dd.tel').text().trim()
       });
-
-      console.log("buffer", buffer)
     });
 
   return buffer;
-}
+};
 
 async function makeExcel(data, pageInfo) {
   var workbook = new Excel.Workbook();
   var worksheet = workbook.addWorksheet('Result');
 
   worksheet.columns = Object.keys(data[0]).map(function (v, i) {
-    return {
-      header: v.charAt(0).toUpperCase() + v.slice(1),
-      key: v,
-    };
+    return { header: v.charAt(0).toUpperCase() + v.slice(1), key: v, };
   });
 
   worksheet.addRows(data);
@@ -115,12 +106,13 @@ async function makeExcel(data, pageInfo) {
   });
 
   pageInfo.browser.close();
-}
+};
 
 userInput = readline.question('검색어 입력 (종료는 Ctrl+c) > ');
+
 if (userInput.trim().length > 0) {
   initPupp('https://map.naver.com')
     .then(pageInfo => gotoPage(pageInfo))
     .then(pageInfo => searchForm(pageInfo))
     .then(pageInfo => pageControl(pageInfo));
-}
+};
