@@ -1,26 +1,63 @@
 'use strict';
 
-const puppeteer = require('puppeteer');
-
 /**
-* @description Login Github
-* `GITHUB_USER=myuser GITHUB_PWD=mypassword node github.js`
+* @description Github Login, main, profile screenshot
+* `node github.js`
 */
-try {
-  (async () => {
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-    await page.goto('https://github.com/login');
 
-    await page.type('#login_field', process.env.GITHUB_USER);
-    await page.type('#password', process.env.GITHUB_PWD);
-    await page.click('[name="commit"]');
-    await page.waitFor(2000);
-    await page.screenshot({ path: 'github.png' });
-    console.log("screenshot complete");
+// require modules
+const puppeteer = require('puppeteer'),
+  readline = require('readline-sync');
 
-    await browser.close();
-  })();
-} catch (error) {
-  console.error(error);
+// declare
+let userId = false, userPassword = false;
+
+async function initPupp(url) {
+  const browser = await puppeteer.launch({ headless: false });
+  const page = await browser.newPage();
+
+  return { page, browser, url };
+};
+
+async function gotoPage(pageInfo) {
+  await pageInfo.page.goto(`${pageInfo.url}/login`, { waitUntil: 'networkidle2' });
+  await pageInfo.page.setViewport({ width: 1248, height: 1024 });
+
+  return pageInfo;
+};
+
+async function loginForm(pageInfo) {
+  const userIdForm = await pageInfo.page.$('#login_field');
+  await userIdForm.type(userId);
+
+  const userPasswordForm = await pageInfo.page.$('#password');
+  await userPasswordForm.type(userPassword)
+
+  await pageInfo.page.click('[name="commit"]');
+  await pageInfo.page.waitFor(8000);
+
+  return pageInfo;
+};
+
+async function pageControl(pageInfo) {
+  await pageInfo.page.screenshot({ path: 'main.png' });
+  await pageInfo.page.waitFor(1000);
+
+  await pageInfo.page.goto(`${pageInfo.url}/${userId}`, { waitUntil: 'networkidle2' });
+  await pageInfo.page.waitFor(2000);
+
+  await pageInfo.page.screenshot({ path: 'profile.png' });
+  console.log('saved');
+
+  await pageInfo.browser.close();
+};
+
+userId = readline.question('아이디 입력 (종료는 Ctrl+c) > ');
+userPassword = readline.question('패스워드 입력 (종료는 Ctrl+c) > ');
+
+if (userId.trim().length > 0 && userPassword.trim().length > 0) {
+  initPupp('https://github.com/')
+    .then(pageInfo => gotoPage(pageInfo))
+    .then(pageInfo => loginForm(pageInfo))
+    .then(pageInfo => pageControl(pageInfo));
 };

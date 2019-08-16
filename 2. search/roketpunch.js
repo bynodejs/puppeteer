@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * @description Search youtube content
- * `node youtube.js`
- */
+* @description Search roketpunch company
+* `node roketpunch.js`
+*/
 
 // require modules
 const puppeteer = require('puppeteer'),
@@ -27,7 +27,7 @@ async function gotoPage(pageInfo) {
 };
 
 async function searchForm(pageInfo) {
-  const inputForm = await pageInfo.page.$('#search');
+  const inputForm = await pageInfo.page.$('#id_q');
   await inputForm.type(userInput);
   await inputForm.press('Enter');
 
@@ -37,14 +37,38 @@ async function searchForm(pageInfo) {
 };
 
 async function pageControl(pageInfo) {
-  await pageInfo.page.screenshot({ path: 'youtube_search_list.png' });
+  let buffer = [];
 
-  const videos = await pageInfo.page.$$('ytd-thumbnail.ytd-video-renderer');
-  await videos[2].click();
-  await pageInfo.page.waitFor(2000);
+  await pageInfo.page.waitForSelector('div#company-list');
+  const ehList = await pageInfo.page.$$('div.company');
 
-  await pageInfo.page.screenshot({ path: 'youtube_search_detail.png' });
-  console.log('saved');
+  for (let eh of ehList) {
+    let titles = 'X', contents = 'X', links = 'X';
+
+    let t = await eh.$('strong');
+    if (t) {
+      titles = await eh.$eval('strong', function (el) {
+        return el.textContent.trim();
+      });
+    }
+
+    let c = await eh.$('.description');
+    if (c) {
+      contents = await eh.$eval('.description', function (el) {
+        return el.textContent.trim();
+      });
+    }
+
+    let l = await eh.$('a.link');
+    if (l) {
+      links = await eh.$eval('a.link', function (el) {
+        return el.href.trim();
+      });
+    }
+
+    buffer.push({ title: titles, content: contents, link: links });
+  }
+  console.log(buffer);
 
   await pageInfo.browser.close();
 };
@@ -52,7 +76,7 @@ async function pageControl(pageInfo) {
 userInput = readline.question('검색어 입력 (종료는 Ctrl+c) > ');
 
 if (userInput.trim().length > 0) {
-  initPupp('https://youtube.com')
+  initPupp('https://www.rocketpunch.com/companies')
     .then(pageInfo => gotoPage(pageInfo))
     .then(pageInfo => searchForm(pageInfo))
     .then(pageInfo => pageControl(pageInfo));

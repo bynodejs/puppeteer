@@ -1,37 +1,64 @@
 'use strict';
 
-// require modules
-const puppeteer = require('puppeteer');
-
 /**
-* @description Looks for a "nyan cat pullover" on amazon.com, goes two page two clicks the third one.
+* @description Search amazon product
 */
-try {
-  (async () => {
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-    await page.goto('https://www.amazon.com');
-    await page.setViewport({ width: 1280, height: 800 });
 
-    await page.type('#twotabsearchtextbox', 'nyan cat pullover');
-    await page.click('input.nav-input');
-    await page.screenshot({ path: 'amazon_nyan_cat_pullovers_list.png' });
+// require modules
+const puppeteer = require('puppeteer'),
+  readline = require('readline-sync');
 
-    await page.waitFor(2000);
-    await page.click('li.a-last a');
+// declare
+let userInput = false;
 
-    await page.waitFor(2000);
-    const pullovers = await page.$$('a.a-link-normal.a-text-normal');
+async function initPupp(url) {
+  const browser = await puppeteer.launch({ headless: false });
+  const page = await browser.newPage();
 
-    await page.waitFor(2000);
-    await pullovers[2].click();
+  return { page, browser, url };
+};
 
-    await page.waitFor(2000);
-    await page.waitForSelector('#ppd');
-    await page.screenshot({ path: 'amazon_product.png' });
+async function gotoPage(pageInfo) {
+  await pageInfo.page.goto(pageInfo.url, { waitUntil: 'networkidle2' });
+  await pageInfo.page.setViewport({ width: 1248, height: 1024 });
 
-    await browser.close();
-  })();
-} catch (error) {
-  console.error(error);
+  return pageInfo;
+};
+
+async function searchForm(pageInfo) {
+  const inputForm = await pageInfo.page.$('#twotabsearchtextbox');
+  await inputForm.type(userInput);
+  await inputForm.press('Enter');
+
+  await pageInfo.page.waitFor(3000);
+
+  return pageInfo;
+};
+
+async function pageControl(pageInfo) {
+  await pageInfo.page.screenshot({ path: 'prduct_list.png' });
+  await pageInfo.page.waitFor(2000);
+
+  await pageInfo.page.click('li.a-last a');
+  await pageInfo.page.waitFor(2000);
+
+  const pullovers = await pageInfo.page.$$('a.a-link-normal.a-text-normal');
+  await pageInfo.page.waitFor(2000);
+  await pullovers[2].click();
+  await pageInfo.page.waitFor(2000);
+
+  await pageInfo.page.waitForSelector('#ppd');
+  await pageInfo.page.screenshot({ path: 'product_detail.png' });
+  console.log('saved');
+
+  await pageInfo.browser.close();
+};
+
+userInput = readline.question('검색어 입력 (종료는 Ctrl+c) > ');
+
+if (userInput.trim().length > 0) {
+  initPupp('https://www.amazon.com')
+    .then(pageInfo => gotoPage(pageInfo))
+    .then(pageInfo => searchForm(pageInfo))
+    .then(pageInfo => pageControl(pageInfo));
 };

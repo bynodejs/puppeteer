@@ -1,9 +1,14 @@
 'use strict';
 
+/**
+* @description Grabs and clips out just the stock tickers on the Yahoo finance page
+* `node screenshots_clipped.js`
+*/
+
 // require modules
 const puppeteer = require('puppeteer');
 
-// screenshot options
+// declare options
 const options = {
   path: 'clipped_stocktickers.png',
   fullPage: false,
@@ -15,9 +20,6 @@ const options = {
   }
 };
 
-/**
-* @description Grabs and clips out just the stock tickers on the Yahoo finance page
-*/
 try {
   (async () => {
     const browser = await puppeteer.launch({ headless: false });
@@ -26,6 +28,7 @@ try {
     await page.setViewport({ width: 1280, height: 800 });
     
     await page.screenshot(options);
+    console.log('saved');
 
     await browser.close();
   })();

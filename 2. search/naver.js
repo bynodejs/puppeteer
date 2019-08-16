@@ -1,7 +1,8 @@
 'use strict';
 
 /**
- * @description naver map 검색
+ * @description Search naver map
+ * `node naver.js`
  */
 
 // require modules
@@ -10,6 +11,7 @@ const puppeteer = require('puppeteer'),
   cheerio = require('cheerio'),
   Excel = require('exceljs');
 
+// declare
 let userInput = false;
 
 async function initPupp(url) {

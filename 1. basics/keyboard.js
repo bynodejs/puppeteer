@@ -1,11 +1,13 @@
 'use strict';
 
+/**
+* @description types into a text editor
+* `node keyboard.js`
+*/
+
 // require modules
 const puppeteer = require('puppeteer');
 
-/**
-* @description types into a text editor
-*/
 try {
   (async () => {
     const browser = await puppeteer.launch({ headless: false });
@@ -15,6 +17,7 @@ try {
     await page.focus('trix-editor');
     await page.keyboard.type('Just adding a title');
     await page.screenshot({ path: 'keyboard.png' });
+    console.log('saved');
 
     await browser.close();
   })();

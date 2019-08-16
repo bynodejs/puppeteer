@@ -1,11 +1,13 @@
 'use strict';
 
+/**
+ * @description Create an alert dialog and close it again.
+ * `node alerts.js`
+ */
+
 // require modules
 const puppeteer = require('puppeteer');
 
-/**
- * @description Create an alert dialog and close it again.
- */
 try {
   (async () => {
     const browser = await puppeteer.launch({ headless: false });
@@ -16,6 +18,7 @@ try {
       console.log("dialog message : ", dialog.message());
       await dialog.dismiss();
     });
+
     await page.evaluate(() => alert('This message is inside an alert box'));
 
     await browser.close();

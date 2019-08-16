@@ -30,7 +30,9 @@
     "puppeteer",
     "cheerio",
     "exceljs",
-    "readline"
+    "readline",
+    "promise/then",
+    "async/await"
   ],
   "bugs": {
     "url": "https://github.com/bynodejs/crawling/issues"

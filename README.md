@@ -27,7 +27,6 @@ Index
 
 * login
     * <a href = "https://github.com/bynodejs/crawling/blob/master/3.%20login/github.js">github : github login & my profile screenshot</a>
-    * <a href = "https://github.com/bynodejs/crawling/blob/master/3.%20login/google_social.js">google_social : google social login</a>
     * <a href = "https://github.com/bynodejs/crawling/blob/master/3.%20login/roketpunch.js">roketpunch : roketpunch login & search company</a>
     * <a href = "https://github.com/bynodejs/crawling/blob/master/3.%20login/twitter.js">twitter : twitter login</a>
 

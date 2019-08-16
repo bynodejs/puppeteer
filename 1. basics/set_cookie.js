@@ -1,9 +1,14 @@
 'use strict';
 
+/**
+* @description Sets the "login_email" property in a Paypal cookie so the login screen is pre-filled with an email address.
+* `node set_cookie.js`
+*/
+
 // require modules
 const puppeteer = require('puppeteer');
 
-// cookie
+// declare cookie
 const cookie = {
   name: 'login_email',
   value: 'set_by_cookie@domain.com',
@@ -14,9 +19,6 @@ const cookie = {
   secure: true
 };
 
-/**
-* @description Sets the "login_email" property in a Paypal cookie so the login screen is pre-filled with an email address.
-*/
 try {
   (async () => {
     const browser = await puppeteer.launch({ headless: false });
@@ -25,6 +27,7 @@ try {
 
     await page.setCookie(cookie);
     await page.screenshot({ path: 'paypal_login.png' });
+    console.log('saved');
 
     await browser.close();
   })();
