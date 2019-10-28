@@ -1,13 +1,9 @@
 {
-  "name": "crawling",
+  "name": "puppeteer-example",
   "version": "1.0.0",
-  "description": "crawling",
+  "description": "puppeteer-example",
   "author": "AGUMON",
   "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bynodejs/crawling.git"
-  },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "exceljs": "^1.14.0",
@@ -21,19 +17,10 @@
     "js-comments": "^0.5.4",
     "lodash": "^4.17.11"
   },
-  "main": ".eslintrc.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bynodejs/crawling.git"
   },
-  "keywords": [
-    "crawling",
-    "puppeteer",
-    "cheerio",
-    "exceljs",
-    "readline",
-    "promise/then",
-    "async/await"
-  ],
   "bugs": {
     "url": "https://github.com/bynodejs/crawling/issues"
   },

@@ -1,8 +1,8 @@
 "use strict";
 
 /**
- * @description Search youtube content
- * `node youtube.js`
+ * @description Search google maps
+ * `node maps.google.js`
  */
 
 // require modules
@@ -27,23 +27,17 @@ async function gotoPage(pageInfo) {
 }
 
 async function searchForm(pageInfo) {
-  const inputForm = await pageInfo.page.$("#search");
+  const inputForm = await pageInfo.page.$("#searchboxinput");
   await inputForm.type(userInput);
   await inputForm.press("Enter");
 
-  await pageInfo.page.waitFor(1000);
+  await pageInfo.page.waitFor(3000);
 
   return pageInfo;
 }
 
 async function pageControl(pageInfo) {
-  await pageInfo.page.screenshot({ path: "youtube_search_list.png" });
-
-  const videos = await pageInfo.page.$$("ytd-thumbnail.ytd-video-renderer");
-  await videos[2].click();
-  await pageInfo.page.waitFor(2000);
-
-  await pageInfo.page.screenshot({ path: "youtube_search_detail.png" });
+  await pageInfo.page.screenshot({ path: "google.png" });
   console.log("saved");
 
   await pageInfo.browser.close();
@@ -52,7 +46,7 @@ async function pageControl(pageInfo) {
 userInput = readline.question("검색어 입력 (종료는 Ctrl+c) > ");
 
 if (userInput.trim().length > 0) {
-  initPupp("https://youtube.com")
+  initPupp("https://www.google.co.kr/maps")
     .then(pageInfo => gotoPage(pageInfo))
     .then(pageInfo => searchForm(pageInfo))
     .then(pageInfo => pageControl(pageInfo));
