@@ -1,16 +1,16 @@
-'use strict';
+"use strict";
 
 /**
-* @description Grabs and clips out just the stock tickers on the Yahoo finance page
-* `node screenshots_clipped.js`
-*/
+ * @description Grabs and clips out just the stock tickers on the Yahoo finance page
+ * `node screenshots_clipped.js`
+ */
 
 // require modules
-const puppeteer = require('puppeteer');
+const puppeteer = require("puppeteer");
 
 // declare options
 const options = {
-  path: 'clipped_stocktickers.png',
+  path: "clipped_stocktickers.png",
   fullPage: false,
   clip: {
     x: 0,
@@ -24,14 +24,14 @@ try {
   (async () => {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
-    await page.goto('https://finance.yahoo.com/');
+    await page.goto("https://finance.yahoo.com/");
     await page.setViewport({ width: 1280, height: 800 });
-    
+
     await page.screenshot(options);
-    console.log('saved');
+    console.log("saved");
 
     await browser.close();
   })();
 } catch (error) {
   console.error(error);
-};
+}
