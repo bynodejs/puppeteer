@@ -80,4 +80,4 @@ Modules
 Blog
 ----
 
-* <a href="https://ljlm0402.netlify.com/nodejs/puppeteer/">puppeteer</a>
+* <a href="https://ljlm0402.netlify.com/nodejs/puppeteer/">크롤링 👣 ▻ puppeteer</a>
